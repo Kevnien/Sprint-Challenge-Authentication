@@ -3,6 +3,7 @@ const knex = require('knex');
 const knexConfig = require('../knexfile.js');
 const db = knex(knexConfig.development);
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const { authenticate } = require('./middlewares');
 
@@ -32,7 +33,8 @@ function login(req, res) {
   db('users').where({username}).first()
     .then(user => {
       if(user && bcrypt.compareSync(password, user.password)){
-        res.status(200).json(user);
+        const token = generateToken(user);
+        res.status(200).json({username: user.username, token: token});
       }else{
         res.status(401).json({message:'username and password do not match'});
       }
@@ -55,4 +57,16 @@ function getJokes(req, res) {
 
 function checkAlive(req, res){
   res.status(200).json("It's alive!");
+}
+
+const secret = "but I couldn'nt open up my own vault.";
+
+function generateToken(user){
+  const payload = {
+    username: user.username
+  };
+  const options = {
+    expiresIn: '5m'
+  };
+  return jwt.sign(payload, secret, options);
 }
