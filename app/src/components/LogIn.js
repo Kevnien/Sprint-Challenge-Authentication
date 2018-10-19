@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import {connect} from 'react-redux';
+import {logIn} from '../actions.js';
 
 class LogIn extends React.Component{
     state = {
@@ -8,33 +10,47 @@ class LogIn extends React.Component{
     };
 
     render(){
-        return(
-            <form onSubmit={this.handleSubmit}>
+        if(this.props.loggedIn){
+            return(
                 <div>
-                    <label htmlFor='username'>
-                        Username
-                    </label>
-                    <input
-                        tpye='text'
-                        onChange={this.handleChange}
-                        name='username'
-                    />
+                    Welcome {this.props.username}.
                 </div>
+            )
+        }else if(this.props.loggingIn){
+            return(
                 <div>
-                    <label htmlFor='password'>
-                        Password
-                    </label>
-                    <input
-                        tpye='password'
-                        onChange={this.handleChange}
-                        name='password'
-                    />
+                    Logging in...
                 </div>
-                <button type='submit'>
-                    Log in
-                </button>
-            </form>
-        )
+            )
+        }else{
+            return(
+                <form onSubmit={this.handleSubmit}>
+                    <div>
+                        <label htmlFor='username'>
+                            Username
+                        </label>
+                        <input
+                            type='text'
+                            onChange={this.handleChange}
+                            name='username'
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor='password'>
+                            Password
+                        </label>
+                        <input
+                            type='password'
+                            onChange={this.handleChange}
+                            name='password'
+                        />
+                    </div>
+                    <button type='submit'>
+                        Log in
+                    </button>
+                </form>
+            )
+        }
     }
 
     handleChange = event => {
@@ -43,17 +59,19 @@ class LogIn extends React.Component{
 
     handleSubmit = event => {
         event.preventDefault();
-        axios
-            .post('http://localhost:3300/api/login', this.state)
-            .then(response => {
-                console.log(response.data);
-                localStorage.setItem(
-                    'jwttoken',
-                    response.data.token
-                );
-            })
-            .catch(error => console.error(error));
+        const user = {
+            username: this.state.username,
+            password: this.state.password
+        }
+        this.props.logIn(user);
+        this.setState({username:'', password:''});
     }
 }
 
-export default LogIn;
+const mapDispatchToProps = state => ({
+    loggedIn: state.loggedIn,
+    loggingIn: state.loggingIn,
+    username: state.username
+});
+
+export default connect(mapDispatchToProps, {logIn})(LogIn);
