@@ -4,6 +4,7 @@ const knexConfig = require('../knexfile.js');
 const db = knex(knexConfig.development);
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const secret = require('../_secrets/keys').jwtKey;
 
 const { authenticate } = require('./middlewares');
 
@@ -58,8 +59,6 @@ function getJokes(req, res) {
 function checkAlive(req, res){
   res.status(200).json("It's alive!");
 }
-
-const secret = "but I couldn'nt open up my own vault.";
 
 function generateToken(user){
   const payload = {
