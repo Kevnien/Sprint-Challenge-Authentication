@@ -24,11 +24,20 @@ function register(req, res) {
       res.status(200).json({id:idArray[0]});
     })
     .catch(err => res.status(500).json(err.message));
-  
 }
 
 function login(req, res) {
   // implement user login
+  const {username, password} = req.body;
+  db('users').where({username}).first()
+    .then(user => {
+      if(user && bcrypt.compareSync(password, user.password)){
+        res.status(200).json(user);
+      }else{
+        res.status(401).json({message:'username and password do not match'});
+      }
+    })
+    .catch(err => res.status(500).json(err.message));
 }
 
 function getJokes(req, res) {
