@@ -1,9 +1,12 @@
-import {ERROR, LOGGINGIN, LOGGEDIN, LOGGINGOUT, LOGGEDOUT} from './actions';
+import {ERROR, LOGGINGIN, LOGGEDIN, LOGGINGOUT, LOGGEDOUT, GETTINGJOKES, GOTJOKES} from './actions.js';
 
 const initialState = {
     loggingIn: false,
     loggedIn: false,
     username: '',
+    jokes: [],
+    gettingJokes: false,
+    gotJokes: false,
     error: null
 };
 
@@ -28,14 +31,26 @@ const reducer = (state=initialState, action) => {
                 loggedIn: false,
                 username: ''
             }
-        case ERROR:
-            console.error(action.payload);
-            return{
-                error: action.payload
+            case GETTINGJOKES:
+                return{
+                    ...state,
+                    gettingJokes: true
+                }
+            case GOTJOKES:
+                return{
+                    ...state,
+                    gettingJokes: false,
+                    gotJokes: true,
+                    jokes: action.payload
+                }
+            case ERROR:
+                console.error(action.payload);
+                return{
+                    error: action.payload
+                }
+            default:
+                return state;
             }
-        default:
-            return state;
-    }
-};
+        };
 
 export default reducer;

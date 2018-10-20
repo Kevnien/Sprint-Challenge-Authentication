@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {NavLink, Route} from 'react-router-dom';
+import {NavLink, Route, withRouter} from 'react-router-dom';
 import LogIn from './components/LogIn.js';
 import DadJokes from './components/Jokes.js';
+import {connect} from 'react-redux';
+import {logOut} from './actions.js';
 
 const routeHome = '/';
 const routeLogIn = '/log-in';
@@ -21,6 +23,9 @@ class App extends Component {
             <NavLink to={routeLogIn}>Log In</NavLink>
             &nbsp; | &nbsp;
             <NavLink to={routeDadJokes}>Dad Jokes</NavLink>
+            &nbsp; | &nbsp;
+            <button onClick={this.signout}>Log Out</button>
+            <br/>
           </nav>
           <Route exact path={routeHome} component={Home} />
           <Route path={routeLogIn} component={LogIn} />
@@ -28,6 +33,11 @@ class App extends Component {
         </header>
       </div>
     );
+  }
+
+  signout = () => {
+    localStorage.removeItem('jwttoken');
+    this.props.logOut();
   }
 }
 
@@ -39,4 +49,9 @@ const Home = () => {
   )
 }
 
-export default App;
+
+const mapDispatchToProps = state => ({
+  loggedIn: state.loggedIn
+})
+
+export default withRouter(connect(mapDispatchToProps, {logOut})(App));

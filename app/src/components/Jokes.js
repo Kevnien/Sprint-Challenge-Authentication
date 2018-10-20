@@ -1,35 +1,46 @@
 import React from 'react';
-import axios from 'axios';
+import {connect} from 'react-redux';
+import {getJokes} from '../actions.js';
 
-class Jokes extends React.Component{
-    state = {
-        jokes: []
-    }
-
-    render(){
-        if(this.state.jokes.length>0){
-            return(
-                <div>
-                    Jokes:
-                    {this.state.jokes.map((dadJoke, index) => {
-                        return(
-                            <div key={index}>
-                                <div>
-                                    {dadJoke.setup}
+class Jokes extends React.Component{render(){
+        console.log(this.props.jokes);
+        if(this.props.loggedIn){
+            if(this.props.gotJokes){
+                return(
+                    <div>
+                        Jokes:
+                        {this.props.jokes.map((dadJoke, index) => {
+                            return(
+                                <div key={index}>
+                                    <div>
+                                        {dadJoke.setup}
+                                    </div>
+                                    <div>
+                                        {dadJoke.punchline}
+                                    </div>
+                                    <br/>
                                 </div>
-                                <div>
-                                    {dadJoke.punchline}
-                                </div>
-                                <br/>
-                            </div>
-                        )
-                    })}
-                </div>
-            )
+                            )
+                        })}
+                    </div>
+                )
+            }else if(this.props.gettingJokes){
+                return(
+                    <div>
+                        Loading dad jokes...
+                    </div>
+                )
+            }else{
+                return(
+                    <div>
+                        No jokes found.
+                    </div>
+                )
+            }
         }else{
             return(
                 <div>
-                    No dad jokes found. Are you sure you're logged in?
+                    You're not logged in. Please click on the Log In link to do so.
                 </div>
             )
         }
@@ -42,14 +53,15 @@ class Jokes extends React.Component{
                 Authorization: token
             }
         };
-        axios
-            .get('http://localhost:3300/api/jokes', options)
-            .then(response => {
-                console.log(response);
-                this.setState({jokes:response.data});
-            })
-            .catch(error => console.error(error));
+        this.props.getJokes(options);
     }
 }
 
-export default Jokes;
+const mapDispatchToProps = state =>({
+    loggedIn: state.loggedIn,
+    jokes: state.jokes,
+    gotJokes: state.gotJokes,
+    gettingJokes: state.gettingJokes
+});
+
+export default connect(mapDispatchToProps, {getJokes})(Jokes);
