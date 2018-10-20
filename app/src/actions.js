@@ -7,6 +7,8 @@ export const LOGGINGOUT = 'LOGGINGOUT';
 export const LOGGEDOUT = 'LOGGEDOUT';
 export const GETTINGJOKES = 'GETTINGJOKES';
 export const GOTJOKES = 'GOTJOKES';
+export const REGISTERING = 'REGISTERING';
+export const REGISTERED = 'REGISTERED';
 
 export const logIn = user =>{
     return dispatch =>{
@@ -48,3 +50,15 @@ export const getJokes = (options) => {
             .catch(error => console.error(error));
     }
 };
+
+export const register = user => {
+    return dispatch => {
+        dispatch({type:REGISTERING})
+            axios
+                .post('http://localhost:3300/api/register', user)
+                .then(response => {
+                    dispatch({type:REGISTERED})
+                })
+                .catch(error => console.error(error));
+    }
+}

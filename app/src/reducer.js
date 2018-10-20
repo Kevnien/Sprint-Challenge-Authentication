@@ -1,4 +1,4 @@
-import {ERROR, LOGGINGIN, LOGGEDIN, LOGGINGOUT, LOGGEDOUT, GETTINGJOKES, GOTJOKES} from './actions.js';
+import {ERROR, LOGGINGIN, LOGGEDIN, LOGGINGOUT, LOGGEDOUT, GETTINGJOKES, GOTJOKES, REGISTERING, REGISTERED} from './actions.js';
 
 const initialState = {
     loggingIn: false,
@@ -7,6 +7,8 @@ const initialState = {
     jokes: [],
     gettingJokes: false,
     gotJokes: false,
+    registering: false,
+    registered: false,
     error: null
 };
 
@@ -47,6 +49,15 @@ const reducer = (state=initialState, action) => {
                 console.error(action.payload);
                 return{
                     error: action.payload
+                }
+            case REGISTERING:
+                return{
+                    registering: true
+                }
+            case REGISTERED:
+                return{
+                    registering: false,
+                    registered: true
                 }
             default:
                 return state;

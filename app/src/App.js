@@ -4,12 +4,14 @@ import './App.css';
 import {NavLink, Route, withRouter} from 'react-router-dom';
 import LogIn from './components/LogIn.js';
 import DadJokes from './components/Jokes.js';
+import Register from './components/Register.js';
 import {connect} from 'react-redux';
 import {logOut} from './actions.js';
 
 const routeHome = '/';
 const routeLogIn = '/log-in';
 const routeDadJokes = '/dad-jokes';
+export const routeRegister = '/register';
 
 class App extends Component {
   render() {
@@ -30,6 +32,7 @@ class App extends Component {
           <Route exact path={routeHome} component={Home} />
           <Route path={routeLogIn} component={LogIn} />
           <Route path={routeDadJokes} component={DadJokes} />
+          <Route path={routeRegister} component={Register} />
         </header>
       </div>
     );

@@ -1,31 +1,30 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {logIn} from '../actions.js';
-import {NavLink} from 'react-router-dom';
-import {routeRegister} from '../App.js';
+import {register} from '../actions.js';
 
-class LogIn extends React.Component{
+class Register extends React.Component{
     state = {
         username: '',
         password: ''
-    };
+    }
 
     render(){
-        if(this.props.loggedIn){
+        if(this.props.registering){
             return(
                 <div>
-                    Welcome {this.props.username}.
+                    Registering...
                 </div>
             )
-        }else if(this.props.loggingIn){
+        }else if(this.props.registered){
             return(
                 <div>
-                    Logging in...
+                    You are now registered. Try logging in.
                 </div>
             )
         }else{
             return(
                 <div>
+                    Register
                     <form onSubmit={this.handleSubmit}>
                         <div>
                             <label htmlFor='username'>
@@ -33,8 +32,8 @@ class LogIn extends React.Component{
                             </label>
                             <input
                                 type='text'
-                                onChange={this.handleChange}
                                 name='username'
+                                onChange={this.handleChange}
                             />
                         </div>
                         <div>
@@ -43,39 +42,38 @@ class LogIn extends React.Component{
                             </label>
                             <input
                                 type='password'
-                                onChange={this.handleChange}
                                 name='password'
+                                onChange={this.handleChange}
                             />
                         </div>
                         <button type='submit'>
-                            Log in
+                            Register
                         </button>
                     </form>
-                    <NavLink to={routeRegister}>Register</NavLink>
                 </div>
             )
         }
     }
 
-    handleChange = event => {
-        this.setState({[event.target.name]:event.target.value});
-    }
-
     handleSubmit = event => {
         event.preventDefault();
+        console.log('Clicked register button');
         const user = {
             username: this.state.username,
             password: this.state.password
         }
-        this.props.logIn(user);
+        this.props.register(user);
         this.setState({username:'', password:''});
+    }
+
+    handleChange = event => {
+        this.setState({[event.target.name]:event.target.value});
     }
 }
 
 const mapDispatchToProps = state => ({
-    loggedIn: state.loggedIn,
-    loggingIn: state.loggingIn,
-    username: state.username
+    registering: state.registering,
+    registered: state.registered
 });
 
-export default connect(mapDispatchToProps, {logIn})(LogIn);
+export default connect(mapDispatchToProps, {register})(Register);
